@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #0f1117;
+    color: #e2e8f0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #1a1d27;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #2a2d3e;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3a3d5e;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply bg-graph-panel border border-graph-border;
+  }
+
+  .btn-primary {
+    @apply bg-graph-accent hover:bg-graph-accent-hover text-white px-3 py-1.5 rounded-md text-sm font-medium transition-colors;
+  }
+
+  .btn-ghost {
+    @apply hover:bg-graph-border text-graph-muted hover:text-graph-text px-3 py-1.5 rounded-md text-sm transition-colors;
+  }
+
+  .btn-danger {
+    @apply bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-md text-sm font-medium transition-colors;
+  }
+
+  .input {
+    @apply bg-graph-bg border border-graph-border rounded-md px-3 py-1.5 text-sm text-graph-text
+           placeholder-graph-muted focus:outline-none focus:border-graph-accent transition-colors w-full;
+  }
+
+  .badge {
+    @apply text-xs font-medium px-2 py-0.5 rounded-full;
+  }
+
+  .tag-character  { @apply bg-indigo-500/20 text-indigo-300; }
+  .tag-faction    { @apply bg-amber-500/20 text-amber-300; }
+  .tag-event      { @apply bg-emerald-500/20 text-emerald-300; }
+  .tag-item       { @apply bg-blue-500/20 text-blue-300; }
+  .tag-location   { @apply bg-pink-500/20 text-pink-300; }
+  .tag-concept    { @apply bg-purple-500/20 text-purple-300; }
+  .tag-evidence   { @apply bg-slate-500/20 text-slate-300; }
+
+  .status-proposed { @apply bg-yellow-500/20 text-yellow-300; }
+  .status-verified { @apply bg-green-500/20 text-green-300; }
+  .status-rejected { @apply bg-red-500/20 text-red-300; }
+  .status-pending  { @apply bg-blue-500/20 text-blue-300; }
+  .status-accepted { @apply bg-green-500/20 text-green-300; }
+}
