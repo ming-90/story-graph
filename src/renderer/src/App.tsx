@@ -9,6 +9,7 @@ import AISuggestionPanel from './components/AISuggestionPanel'
 import CreateEntityModal from './components/modals/CreateEntityModal'
 import CreateRelationModal from './components/modals/CreateRelationModal'
 import ScenarioPanel from './components/ScenarioPanel'
+import SettingsModal from './components/modals/SettingsModal'
 import { useState } from 'react'
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
   const [createEntityOpen, setCreateEntityOpen] = useState(false)
   const [createRelationOpen, setCreateRelationOpen] = useState(false)
   const [scenarioPanelOpen, setScenarioPanelOpen] = useState(false)
+  const [settingsOpen, setSettingsOpen] = useState(false)
   const [openScenarioId, setOpenScenarioId] = useState<string | undefined>(undefined)
   const [pendingConnection, setPendingConnection] = useState<{ fromId: string; toId: string } | null>(null)
 
@@ -42,6 +44,7 @@ export default function App() {
         onCreateEntity={() => setCreateEntityOpen(true)}
         onCreateRelation={() => setCreateRelationOpen(true)}
         onOpenScenario={() => setScenarioPanelOpen(true)}
+        onOpenSettings={() => setSettingsOpen(true)}
       />
 
       <div className="flex flex-1 overflow-hidden">
@@ -76,6 +79,8 @@ export default function App() {
           initialToId={pendingConnection?.toId}
         />
       )}
+
+      {settingsOpen && <SettingsModal onClose={() => setSettingsOpen(false)} />}
 
       {scenarioPanelOpen && (
         <ScenarioPanel
