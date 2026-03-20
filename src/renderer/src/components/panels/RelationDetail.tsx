@@ -1,5 +1,5 @@
 import { useStore } from '../../store/useStore'
-import { EntityTypeBadge, StatusBadge, ConfidenceBar } from '../shared/Badges'
+import { EntityTypeBadge, StatusBadge, ConfidenceBar, toRelationTypeKo, RELATION_TYPE_KO } from '../shared/Badges'
 import type { RelationStatus } from '../../../../shared/types'
 
 interface RelationDetailProps {
@@ -40,7 +40,12 @@ export default function RelationDetail({ relationId }: RelationDetailProps) {
             삭제
           </button>
         </div>
-        <h2 className="text-base font-bold text-graph-accent">{relation.type}</h2>
+        <h2 className="text-base font-bold text-graph-accent">
+          {toRelationTypeKo(relation.type)}
+          {RELATION_TYPE_KO[relation.type] && (
+            <span className="ml-1.5 text-xs font-normal text-graph-muted font-mono">{relation.type}</span>
+          )}
+        </h2>
         <p className="text-xs text-graph-muted font-mono">{relation.id}</p>
       </div>
 

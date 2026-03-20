@@ -10,6 +10,7 @@ import CreateEntityModal from './components/modals/CreateEntityModal'
 import CreateRelationModal from './components/modals/CreateRelationModal'
 import ScenarioPanel from './components/ScenarioPanel'
 import SettingsModal from './components/modals/SettingsModal'
+import BottomBar from './components/BottomBar'
 import { useState } from 'react'
 
 export default function App() {
@@ -47,7 +48,7 @@ export default function App() {
         onOpenSettings={() => setSettingsOpen(true)}
       />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden min-h-0">
         <LeftPanel />
 
         <main className="flex-1 relative overflow-hidden">
@@ -67,6 +68,8 @@ export default function App() {
 
         {suggestionPanelOpen && <AISuggestionPanel />}
       </div>
+
+      <BottomBar />
 
       {createEntityOpen && (
         <CreateEntityModal onClose={() => setCreateEntityOpen(false)} />

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useStore } from '../../store/useStore'
-import { EntityTypeBadge, StatusBadge, ConfidenceBar } from '../shared/Badges'
+import { EntityTypeBadge, StatusBadge, ConfidenceBar, toRelationTypeKo } from '../shared/Badges'
 
 interface EntityDetailProps {
   entityId: string
@@ -119,7 +119,7 @@ export default function EntityDetail({ entityId, onOpenScenario }: EntityDetailP
                   className="w-full flex items-center gap-2 px-2 py-1.5 rounded bg-graph-border/30 hover:bg-graph-border text-xs text-left transition-colors"
                 >
                   <span className="text-graph-muted">{isSource ? '→' : '←'}</span>
-                  <span className="font-medium text-graph-accent">{rel.type}</span>
+                  <span className="font-medium text-graph-accent">{toRelationTypeKo(rel.type)}</span>
                   <span className="text-graph-muted">
                     {isSource ? other?.name ?? otherId : other?.name ?? otherId}
                   </span>

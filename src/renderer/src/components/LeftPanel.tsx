@@ -9,7 +9,6 @@ const RELATION_STATUSES: RelationStatus[] = ['proposed', 'verified', 'rejected']
 export default function LeftPanel() {
   const entities = useStore((s) => s.entities)
   const relations = useStore((s) => s.relations)
-  const suggestions = useStore((s) => s.suggestions)
   const searchQuery = useStore((s) => s.searchQuery)
   const entityTypeFilter = useStore((s) => s.entityTypeFilter)
   const setEntityTypeFilter = useStore((s) => s.setEntityTypeFilter)
@@ -21,11 +20,9 @@ export default function LeftPanel() {
   const toggleSemanticRelations = useStore((s) => s.toggleSemanticRelations)
   const selectEntity = useStore((s) => s.selectEntity)
 
-  const TAB_LABELS = { entities: '엔티티', filters: '필터', queue: '대기열' }
+  const TAB_LABELS = { entities: '엔티티', filters: '필터' }
 
-  const [tab, setTab] = useState<'entities' | 'filters' | 'queue'>('entities')
-
-  const pendingCount = suggestions.filter((s) => s.status === 'pending').length
+  const [tab, setTab] = useState<'entities' | 'filters'>('entities')
 
   const filteredEntities = entities.filter((e) => {
     const matchesSearch = searchQuery
@@ -52,21 +49,16 @@ export default function LeftPanel() {
     <aside className="panel w-60 shrink-0 flex flex-col border-r overflow-hidden">
       {/* Tabs */}
       <div className="flex border-b border-graph-border">
-        {(['entities', 'filters', 'queue'] as const).map((t) => (
+        {(['entities', 'filters'] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`flex-1 py-2 text-xs font-medium transition-colors relative ${
+            className={`flex-1 py-2 text-xs font-medium transition-colors ${
               tab === t
                 ? 'text-graph-accent'
                 : 'text-graph-muted hover:text-graph-text'
             }`}
           >
-            {t === 'queue' && pendingCount > 0 && (
-              <span className="absolute top-1 right-2 w-4 h-4 text-[10px] bg-graph-accent rounded-full flex items-center justify-center text-white">
-                {pendingCount}
-              </span>
-            )}
             {TAB_LABELS[t]}
           </button>
         ))}
@@ -196,36 +188,6 @@ export default function LeftPanel() {
           </div>
         )}
 
-        {tab === 'queue' && (
-          <div className="p-3">
-            <p className="text-xs text-graph-muted mb-2">
-              AI 제안 대기열 ({pendingCount}개)
-            </p>
-            {suggestions.filter((s) => s.status === 'pending').length === 0 ? (
-              <p className="text-xs text-graph-muted text-center py-8">
-                대기 중인 제안 없음
-              </p>
-            ) : (
-              <div className="space-y-2">
-                {suggestions
-                  .filter((s) => s.status === 'pending')
-                  .map((sug) => (
-                    <div
-                      key={sug.id}
-                      className="p-2 rounded bg-graph-border/50 text-xs space-y-1"
-                    >
-                      <div className="flex items-center gap-1">
-                        <span className="badge status-pending">{sug.suggestionType}</span>
-                      </div>
-                      {sug.reasonSummary && (
-                        <p className="text-graph-muted line-clamp-2">{sug.reasonSummary}</p>
-                      )}
-                    </div>
-                  ))}
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </aside>
   )

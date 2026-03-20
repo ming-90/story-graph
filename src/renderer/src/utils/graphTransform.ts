@@ -1,5 +1,6 @@
 import type { Entity, Relation, StructuralEdge } from '../../../shared/types'
 import type { AppNode, AppEdge } from '../types/graph'
+import { toRelationTypeKo } from '../components/shared/Badges'
 
 const NODE_TYPE_COLORS: Record<string, string> = {
   Character: '#6366f1',
@@ -35,7 +36,7 @@ export function relationsToEdges(relations: Relation[]): AppEdge[] {
     id: rel.id,
     source: rel.from,
     target: rel.to,
-    label: rel.type,
+    label: toRelationTypeKo(rel.type),
     type: 'semanticEdge',
     animated: rel.status === 'proposed',
     data: { relation: rel, edgeKind: 'semantic' as const },
@@ -59,7 +60,7 @@ export function structuralEdgesToEdges(edges: StructuralEdge[]): AppEdge[] {
     id: edge.id,
     source: edge.from,
     target: edge.to,
-    label: edge.type,
+    label: toRelationTypeKo(edge.type),
     type: 'default',
     data: { structural: edge, edgeKind: 'structural' as const },
     style: { stroke: '#64748b', strokeWidth: 1 },
