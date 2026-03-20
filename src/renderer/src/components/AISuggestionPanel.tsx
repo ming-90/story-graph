@@ -1,5 +1,5 @@
 import { useStore } from '../store/useStore'
-import { ConfidenceBar } from './shared/Badges'
+import { ConfidenceBar, toRelationTypeKo } from './shared/Badges'
 
 export default function AISuggestionPanel() {
   const suggestions = useStore((s) => s.suggestions)
@@ -93,7 +93,7 @@ export default function AISuggestionPanel() {
                     <div className="text-xs space-y-1">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="text-graph-muted">{relation.from}</span>
-                        <span className="text-graph-accent font-medium">─ {relation.type} →</span>
+                        <span className="text-graph-accent font-medium">─ {toRelationTypeKo(relation.type)} →</span>
                         <span className="text-graph-muted">{relation.to}</span>
                       </div>
                       {relation.confidence != null && (

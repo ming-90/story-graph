@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useStore } from '../../store/useStore'
 import type { RelationType } from '../../../../shared/types'
+import { toRelationTypeKo } from '../shared/Badges'
 
 const RELATION_TYPES: RelationType[] = [
   'ALLY_OF', 'ENEMY_OF', 'CAUSED_BY', 'CONTRACT_WITH',
@@ -106,7 +107,7 @@ export default function CreateRelationModal({ onClose, initialFromId, initialToI
                       : 'border-graph-border text-graph-muted hover:border-graph-accent/50'
                   }`}
                 >
-                  {t}
+                  {toRelationTypeKo(t)}
                 </button>
               ))}
               <button

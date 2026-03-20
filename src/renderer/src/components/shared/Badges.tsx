@@ -1,5 +1,26 @@
 import type { EntityType, RelationStatus, SuggestionStatus } from '../../../../shared/types'
 
+export const RELATION_TYPE_KO: Record<string, string> = {
+  ALLY_OF: '동맹',
+  ENEMY_OF: '적대',
+  CAUSED_BY: '원인',
+  CONTRACT_WITH: '계약',
+  KNOWS: '알고 있음',
+  MEMBER_OF: '소속',
+  OWNS: '소유',
+  LEADS: '이끔',
+  BETRAYED_BY: '배신',
+  LOVES: '사랑',
+  HATES: '증오',
+  CREATED_BY: '창조',
+  LOCATED_IN: '위치',
+  RELATED_TO: '관련',
+}
+
+export function toRelationTypeKo(type: string): string {
+  return RELATION_TYPE_KO[type] ?? type
+}
+
 const TYPE_CLASS: Record<EntityType, string> = {
   Character: 'tag-character',
   Faction: 'tag-faction',
