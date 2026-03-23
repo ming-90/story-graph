@@ -49,6 +49,12 @@ const api: IpcApi = {
     create: (input) => invoke('scenarios:create', input) as any,
     update: (id, input) => invoke('scenarios:update', id, input) as any,
     remove: (id) => invoke('scenarios:remove', id) as any
+  },
+  settings: {
+    getOpenAIKey: () => invoke('settings:getOpenAIKey') as any,
+    setOpenAIKey: (key) => invoke('settings:setOpenAIKey', key) as any,
+    testOpenAI: () => invoke('settings:testOpenAI') as any,
+    isOpenAIReady: () => invoke('settings:isOpenAIReady') as any
   }
 }
 
