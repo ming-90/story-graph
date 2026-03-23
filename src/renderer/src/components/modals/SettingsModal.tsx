@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { api } from '../../utils/api'
 
 interface SettingsModalProps {
   onClose: () => void
@@ -250,6 +251,51 @@ function DatabaseSettings() {
 }
 
 function AISettings() {
+  const [apiKey, setApiKey] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [testing, setTesting] = useState(false)
+  const [status, setStatus] = useState<'idle' | 'saved' | 'ok' | 'error'>('idle')
+  const [errorMsg, setErrorMsg] = useState('')
+
+  useEffect(() => {
+    api.settings.getOpenAIKey().then((key) => {
+      if (key) setApiKey(key)
+    })
+  }, [])
+
+  const handleSave = async () => {
+    setSaving(true)
+    setStatus('idle')
+    try {
+      await api.settings.setOpenAIKey(apiKey.trim())
+      setStatus('saved')
+    } catch (e: any) {
+      setStatus('error')
+      setErrorMsg(e?.message ?? '저장 실패')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleTest = async () => {
+    setTesting(true)
+    setStatus('idle')
+    try {
+      const result = await api.settings.testOpenAI()
+      if (result.ok) {
+        setStatus('ok')
+      } else {
+        setStatus('error')
+        setErrorMsg(result.error ?? '연결 실패')
+      }
+    } catch (e: any) {
+      setStatus('error')
+      setErrorMsg(e?.message ?? '연결 실패')
+    } finally {
+      setTesting(false)
+    }
+  }
+
   return (
     <div>
       <SectionTitle>API 연결</SectionTitle>
@@ -257,12 +303,51 @@ function AISettings() {
         <div className="flex gap-1">
           <input
             type="password"
+            value={apiKey}
+            onChange={(e) => { setApiKey(e.target.value); setStatus('idle') }}
             className="input text-xs h-7 w-44"
             placeholder="sk-..."
+            onKeyDown={(e) => { if (e.key === 'Enter') handleSave() }}
           />
-          <button className="btn-ghost text-xs h-7 px-2">저장</button>
+          <button
+            onClick={handleSave}
+            disabled={saving || !apiKey.trim()}
+            className="btn-primary text-xs h-7 px-2 disabled:opacity-50"
+          >
+            {saving ? '저장 중...' : '저장'}
+          </button>
         </div>
       </SettingRow>
+
+      {/* 연결 상태 표시 */}
+      <div className="flex items-center gap-3 mt-1 mb-3">
+        <button
+          onClick={handleTest}
+          disabled={testing || !apiKey.trim()}
+          className="btn-ghost text-xs h-7 disabled:opacity-50"
+        >
+          {testing ? '테스트 중...' : '연결 테스트'}
+        </button>
+        {status === 'saved' && (
+          <span className="text-xs text-green-400 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
+            저장됨
+          </span>
+        )}
+        {status === 'ok' && (
+          <span className="text-xs text-green-400 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
+            연결 성공
+          </span>
+        )}
+        {status === 'error' && (
+          <span className="text-xs text-red-400 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-400 inline-block" />
+            {errorMsg}
+          </span>
+        )}
+      </div>
+
       <SettingRow label="모델 선택" description="사용할 언어 모델">
         <select className="input text-xs h-7 w-36">
           <option>gpt-4o</option>

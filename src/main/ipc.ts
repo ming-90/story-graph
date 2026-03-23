@@ -1,5 +1,7 @@
 import { ipcMain } from 'electron'
 import { createRepositories } from './db'
+import { loadSettings, saveSettings } from './services/settings'
+import { initOpenAI, testOpenAIConnection, isOpenAIReady } from './services/openaiClient'
 
 const CHANNELS = [
   'entities:getAll', 'entities:getById', 'entities:getByType', 'entities:create',
@@ -13,7 +15,9 @@ const CHANNELS = [
   'suggestions:getAll', 'suggestions:getPending', 'suggestions:create',
   'suggestions:updateStatus', 'suggestions:remove',
   'scenarios:getAll', 'scenarios:getById', 'scenarios:create',
-  'scenarios:update', 'scenarios:remove'
+  'scenarios:update', 'scenarios:remove',
+  'settings:getOpenAIKey', 'settings:setOpenAIKey',
+  'settings:testOpenAI', 'settings:isOpenAIReady'
 ]
 
 export function registerIpcHandlers(): void {
@@ -65,4 +69,15 @@ export function registerIpcHandlers(): void {
   ipcMain.handle('scenarios:create', (_e, input) => scenarios.create(input))
   ipcMain.handle('scenarios:update', (_e, id: string, input) => scenarios.update(id, input))
   ipcMain.handle('scenarios:remove', (_e, id: string) => scenarios.remove(id))
+
+  // ─── Settings ──────────────────────────────────────────────────────────────
+  ipcMain.handle('settings:getOpenAIKey', () => {
+    return loadSettings().openaiApiKey ?? ''
+  })
+  ipcMain.handle('settings:setOpenAIKey', (_e, key: string) => {
+    saveSettings({ openaiApiKey: key })
+    if (key.trim()) initOpenAI(key.trim())
+  })
+  ipcMain.handle('settings:testOpenAI', () => testOpenAIConnection())
+  ipcMain.handle('settings:isOpenAIReady', () => isOpenAIReady())
 }

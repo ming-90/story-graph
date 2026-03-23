@@ -2,6 +2,8 @@ import { app, shell, BrowserWindow } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { registerIpcHandlers } from './ipc'
+import { loadSettings } from './services/settings'
+import { initOpenAI } from './services/openaiClient'
 
 function createWindow(): void {
   const win = new BrowserWindow({
@@ -42,6 +44,10 @@ app.whenReady().then(() => {
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
+
+  // 저장된 API 키로 OpenAI 클라이언트 초기화
+  const { openaiApiKey } = loadSettings()
+  if (openaiApiKey) initOpenAI(openaiApiKey)
 
   registerIpcHandlers()
   createWindow()

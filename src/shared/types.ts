@@ -203,4 +203,10 @@ export interface IpcApi {
     update: (id: string, input: UpdateScenarioInput) => Promise<Scenario | null>
     remove: (id: string) => Promise<boolean>
   }
+  settings: {
+    getOpenAIKey: () => Promise<string>
+    setOpenAIKey: (key: string) => Promise<void>
+    testOpenAI: () => Promise<{ ok: boolean; error?: string }>
+    isOpenAIReady: () => Promise<boolean>
+  }
 }
