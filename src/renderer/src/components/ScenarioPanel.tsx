@@ -43,8 +43,12 @@ export default function ScenarioPanel({ onClose, initialScenarioId }: ScenarioPa
   const [linkEntityType, setLinkEntityType] = useState<EntityType>('Event')
   const [linkEntityName, setLinkEntityName] = useState('')
   const [addingEntity, setAddingEntity] = useState(false)
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null)
 
   const selected = scenarios.find((s) => s.id === selectedId) ?? null
+  const deleteTarget = deleteConfirmId
+    ? scenarios.find((s) => s.id === deleteConfirmId) ?? null
+    : null
 
   useEffect(() => {
     if (selected) {
@@ -78,6 +82,7 @@ export default function ScenarioPanel({ onClose, initialScenarioId }: ScenarioPa
 
   const handleRemove = async (id: string) => {
     await removeScenario(id)
+    setDeleteConfirmId(null)
     if (selectedId === id) {
       const remaining = scenarios.filter((s) => s.id !== id)
       setSelectedId(remaining[0]?.id ?? null)
@@ -204,7 +209,8 @@ export default function ScenarioPanel({ onClose, initialScenarioId }: ScenarioPa
                       {sc.linkedEntityIds.length}개
                     </span>
                     <button
-                      onClick={(e) => { e.stopPropagation(); handleRemove(sc.id) }}
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(sc.id) }}
                       className="opacity-0 group-hover:opacity-100 text-graph-muted hover:text-red-400 transition-all ml-1"
                     >
                       <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -350,6 +356,46 @@ export default function ScenarioPanel({ onClose, initialScenarioId }: ScenarioPa
           )}
         </div>
       </div>
+
+      {deleteConfirmId && deleteTarget && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
+          onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(null) }}
+        >
+          <div
+            className="panel rounded-xl w-[min(360px,calc(100vw-2rem))] shadow-2xl border border-graph-border overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-4 py-3 border-b border-graph-border">
+              <h3 className="text-sm font-semibold text-graph-text">시나리오 삭제</h3>
+            </div>
+            <div className="px-4 py-3 space-y-2">
+              <p className="text-sm text-graph-text">
+                다음 시나리오를 삭제할까요? 이 작업은 되돌릴 수 없습니다.
+              </p>
+              <p className="text-xs text-graph-muted truncate" title={deleteTarget.title}>
+                「{deleteTarget.title}」
+              </p>
+            </div>
+            <div className="px-4 py-3 border-t border-graph-border flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setDeleteConfirmId(null)}
+                className="btn-ghost text-xs px-3 h-8"
+              >
+                취소
+              </button>
+              <button
+                type="button"
+                onClick={() => handleRemove(deleteConfirmId)}
+                className="text-xs px-3 h-8 rounded-md bg-red-600/90 text-white hover:bg-red-600 transition-colors"
+              >
+                삭제
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
